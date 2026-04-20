@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head}" ></head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/layout :: sidebar}"></div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div th:replace="~{fragments/layout :: navbar}"></div>
+
+            <div class="container-fluid px-4 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Course Search Results</h2>
+                    <a th:href="@{/course/list}" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i> Back to
+                        List</a>
+                </div>
+
+                <div th:if="${searchTerm}" class="alert alert-info">
+                    <i class="bi bi-search me-1"></i>
+                    Showing results for: <strong th:text="${searchTerm}"></strong>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <i class="bi bi-book me-1"></i> Search Results
+                        <span class="badge bg-primary float-end" th:text="${#lists.size(courses)}">0</span>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${courses.isEmpty()}" class="text-center text-muted py-4">
+                            <i class="bi bi-search display-4"></i>
+                            <p class="mt-2">No courses found matching your search criteria.</p>
+                            <a th:href="@{/course/list}" class="btn btn-primary">View All Courses</a>
+                        </div>
+                        
+                        <div th:if="${!courses.isEmpty()}">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Name</th>
+                                            <th>Course Code</th>
+                                            <th>Duration</th>
+                                            <th>Fee</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="course : ${courses}">
+                                            <td data-label="Name" th:text="${course.courseName}"></td>
+                                            <td data-label="Code" th:text="${course.courseCode}"></td>
+                                            <td data-label="Duration" th:text="${course.duration}"></td>
+                                            <td data-label="Fee" th:text="${'Rs.' + #numbers.formatDecimal(course.fee, 1, 'COMMA', 2, 'POINT')}"></td>
+                                            <td data-label="Description" th:text="${course.description}"></td>
+                                            <td data-label="Actions">
+                                                <a th:href="@{/course/{id}(id=${course.id})}" class="btn btn-sm btn-info text-white" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>
